@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+    <properties>
+        <property name="string_log">%-23d{dd-MM-yyyy HH:mm:ss}[%-5p] %-42l %m%n</property>
+    </properties>
+	
+    <Appenders>
+        <Console name="console">
+            <PatternLayout>
+                <pattern>${string_log}</pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="file" fileName="/home/app/logs/working.log" filePattern="/home/app/logs/%d{dd-MM-yy}/working-%d{dd-MM-yy}.log" immediateFlush="false">
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+                <TimeBasedTriggeringPolicy interval="20" modulate="true"/>
+            </Policies>
+            <PatternLayout pattern="%-23d{dd-MM-yyyy HH:mm:ss}[%-5p] %-42l %m%n" charset="UTF-8"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <appender-ref ref="console"/>
+        </Root>
+        <Logger name="net.example" level="DEBUG" additivity="true">
+            <appender-ref ref="file"/>
+        </Logger>
+    </Loggers>
+</configuration>
