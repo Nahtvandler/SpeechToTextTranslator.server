@@ -1,10 +1,12 @@
 package spring.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import spring.DTOs.LoginPair;
 import spring.DTOs.UserHTTPPojo;
+import spring.LoginStatusEnum;
 import spring.hibernate.Dao.ClientDao;
 import spring.hibernate.entity.Client;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 public class ClientService {
+    private final static Logger logger = LogManager.getLogger(ClientService.class);
 
     @Autowired
     public ClientDao clientDao;
@@ -26,10 +29,10 @@ public class ClientService {
         Client client;
         try {
             client = clientDao.save(userRequest);
+            logger.info("Client with login {} registration is successful", userRequest.getLogin());
             return client != null ? true : false;
         } catch (Exception e) {
-            // TODO Logging
-            e.printStackTrace();
+            logger.error("Client {} registration error", userRequest.getLogin(), e);
             return false;
         }
     }
@@ -49,10 +52,15 @@ public class ClientService {
             if (client == null) {
                 client = clientDao.getClientByLogin(login);
 
-                loginPair.setStatus(client != null ? "3" : "2");
+                LoginStatusEnum status = client != null
+                        ? LoginStatusEnum.INCORRECT_PASSWORD
+                        : LoginStatusEnum.CLIENT_NOT_FOUND;
+                loginPair.setStatus(status.getStatus());
+
+                logger.info("Client {} authorization failed: {}", login, status.name());
                 return loginPair;
             } else {
-                loginPair.setStatus("1");
+                loginPair.setStatus(LoginStatusEnum.SUCCES.getStatus());
 
                 UserHTTPPojo userHTTPPojo = new UserHTTPPojo();
                 userHTTPPojo.setLogin(client.getLogin());
@@ -63,10 +71,11 @@ public class ClientService {
 
                 loginPair.setClient(userHTTPPojo);
 
+                logger.info("Client {} authorization success", login);
                 return loginPair;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error authorizing client {}", login, e);
             return loginPair;
         }
     }
