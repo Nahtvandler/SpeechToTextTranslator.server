@@ -1,6 +1,7 @@
 package spring.hibernate.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "clients")
@@ -25,6 +26,9 @@ public class Client {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Room> rooms;
 
     public Integer getUserId() {
         return userId;
@@ -72,5 +76,13 @@ public class Client {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 }

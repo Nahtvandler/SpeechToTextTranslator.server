@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import spring.DTOs.LoginPair;
+import spring.DTOs.RoomHttpPojo;
 import spring.DTOs.UserHTTPPojo;
 import spring.service.ClientService;
+import spring.service.RoomService;
 
 
 @Controller
@@ -21,8 +23,12 @@ public class MainController {
     @Autowired
     ClientService clientService;
 
-    public MainController(ClientService clientService) {
+    @Autowired
+    RoomService roomService;
+
+    public MainController(ClientService clientService, RoomService roomService) {
         this.clientService = clientService;
+        this.roomService = roomService;
     }
 
     @RequestMapping("/")
@@ -45,6 +51,27 @@ public class MainController {
 
         LoginPair loginPair = clientService.doLogin(login, password);
         return loginPair;
+    }
+
+    @RequestMapping("/createRoom")
+    public @ResponseBody RoomHttpPojo createRoom(@RequestBody RoomHttpPojo request) {
+
+        RoomHttpPojo roomHttpPojo;
+        try {
+            roomHttpPojo = roomService.createRoom(request);
+        } catch (Exception e) {
+            //TODO logging
+            e.printStackTrace();
+            return null;
+        }
+
+        return roomHttpPojo;
+    }
+
+    @RequestMapping("/connectToRoom")
+    public @ResponseBody RoomHttpPojo connectToRoom(@RequestParam("id") Integer id) {
+        // TODO logging
+        return roomService.findRoomById(id);
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
