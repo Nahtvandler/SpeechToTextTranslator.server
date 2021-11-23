@@ -30,7 +30,7 @@ public class ClientService {
         try {
             client = clientDao.save(userRequest);
             logger.info("Client with login {} registration is successful", userRequest.getLogin());
-            return client != null ? true : false;
+            return client != null;
         } catch (Exception e) {
             logger.error("Client {} registration error", userRequest.getLogin(), e);
             return false;
