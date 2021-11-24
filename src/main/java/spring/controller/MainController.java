@@ -60,8 +60,7 @@ public class MainController {
         try {
             roomHttpPojo = roomService.createRoom(request);
         } catch (Exception e) {
-            //TODO logging
-            e.printStackTrace();
+            logger.error("An error occurred while creating the room: " + request.getName());
             return null;
         }
 

@@ -2,6 +2,8 @@ package spring.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class RoomHttpPojo {
 
     @JsonProperty(value = "id")
@@ -46,5 +48,21 @@ public class RoomHttpPojo {
 
     public void setOwner(UserHTTPPojo owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoomHttpPojo that = (RoomHttpPojo) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(owner, that.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, owner);
     }
 }

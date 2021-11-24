@@ -2,6 +2,8 @@ package spring.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class UserHTTPPojo {
     @JsonProperty(value = "login")
     private String login;
@@ -67,5 +69,23 @@ public class UserHTTPPojo {
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserHTTPPojo that = (UserHTTPPojo) o;
+        return Objects.equals(login, that.login) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(middleName, that.middleName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, firstName, middleName, lastName, password);
     }
 }

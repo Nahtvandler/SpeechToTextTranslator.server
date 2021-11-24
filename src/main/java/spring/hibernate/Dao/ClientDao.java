@@ -16,6 +16,9 @@ public class ClientDao {
     @Autowired
     private ClientRepository clientRepository;
 
+    public ClientDao() {
+    }
+
     public ClientDao(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
